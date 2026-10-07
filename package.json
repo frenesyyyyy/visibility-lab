@@ -1,0 +1,15 @@
+{
+  "name": "visibility-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A local workbench for measuring brand mentions in search-grounded AI answers.",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "check": "node --check server.js && node --check public/app.js"
+  }
+}

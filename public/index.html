@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A local workbench for brand visibility in search-grounded AI answers."
+    />
+    <title>Visibility Lab</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#"
+        >Visibility Lab<span class="wordmark-dot" aria-hidden="true"></span
+      ></a>
+      <nav aria-label="Main">
+        <a href="#workspace">Workspace</a><a href="#results">Results</a
+        ><a href="#method">Method</a>
+      </nav>
+      <span class="local-label">Runs on your computer</span>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">A clearer view of AI search</p>
+        <h1 id="hero-title">See where<br />your brand appears.</h1>
+        <p class="hero-copy">
+          Ask the questions your customers ask.<br />Compare grounded answers.
+          Follow the sources.
+        </p>
+        <div class="hero-actions">
+          <a href="#workspace" class="button primary"
+            >Start an analysis <span aria-hidden="true">→</span></a
+          ><button id="example" class="text-button" type="button">
+            Explore an example <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <p class="hero-footnote">
+          Your keys. Your questions. One local workspace.
+        </p>
+      </section>
+
+      <section
+        id="workspace"
+        class="workspace section"
+        aria-labelledby="workspace-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / Set the context</p>
+            <h2 id="workspace-title">A question worth asking.</h2>
+          </div>
+          <p>
+            Start with a market, then refine the questions.<br />The brand is
+            used for measurement, not added to prompts.
+          </p>
+        </div>
+        <form id="run-form">
+          <fieldset id="settings">
+            <legend class="sr-only">Analysis settings</legend>
+            <div class="context-grid">
+              <label
+                >Brand<input
+                  id="brand"
+                  name="brand"
+                  value="Northstar"
+                  required
+                  maxlength="100"
+                  autocomplete="off"
+              /></label>
+              <label
+                >Also known as <span class="optional">optional</span
+                ><input
+                  id="aliases"
+                  placeholder="Comma-separated names"
+                  maxlength="800"
+                  autocomplete="off"
+              /></label>
+              <label
+                >Category<input
+                  id="category"
+                  value="residential solar installers"
+                  required
+                  maxlength="150"
+              /></label>
+              <label
+                >Market<input
+                  id="market"
+                  value="Germany"
+                  required
+                  maxlength="100"
+              /></label>
+            </div>
+            <div class="setup-grid">
+              <div class="question-panel">
+                <div class="panel-heading">
+                  <h3>The questions</h3>
+                  <div class="generate-controls">
+                    <label for="count" class="sr-only"
+                      >Number of questions</label
+                    ><input
+                      id="count"
+                      type="number"
+                      min="1"
+                      max="30"
+                      value="10"
+                      aria-label="Number of questions"
+                    /><button id="generate" type="button" class="small-button">
+                      Build questions
+                    </button>
+                  </div>
+                </div>
+                <label for="questions" class="sr-only"
+                  >Questions, one per line</label
+                ><textarea
+                  id="questions"
+                  rows="11"
+                  spellcheck="false"
+                  required
+                ></textarea>
+                <div class="field-footnote">
+                  <span id="question-count">10 questions</span
+                  ><span>One per line · edit freely</span>
+                </div>
+              </div>
+              <div class="provider-panel">
+                <h3>Connect your providers</h3>
+                <div class="provider-field">
+                  <label class="check-label"
+                    ><input
+                      type="checkbox"
+                      id="use-openai"
+                      checked
+                    />OpenAI<span>Web search</span></label
+                  ><label class="sr-only" for="key-openai">OpenAI API key</label
+                  ><input
+                    type="password"
+                    id="key-openai"
+                    placeholder="OpenAI API key"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="512"
+                  />
+                </div>
+                <div class="provider-field">
+                  <label class="check-label"
+                    ><input
+                      type="checkbox"
+                      id="use-perplexity"
+                      checked
+                    />Perplexity<span>Search · fast preset</span></label
+                  ><label class="sr-only" for="key-perplexity"
+                    >Perplexity API key</label
+                  ><input
+                    type="password"
+                    id="key-perplexity"
+                    placeholder="Perplexity API key"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="512"
+                  />
+                </div>
+                <p class="key-note">
+                  Keys stay in memory for this run and go only to their
+                  provider. Nothing is saved to your browser or a database.
+                </p>
+                <details class="run-options">
+                  <summary>Run settings</summary>
+                  <div class="options-grid">
+                    <label
+                      >OpenAI model<input
+                        id="model"
+                        value="gpt-4.1-mini"
+                        maxlength="100" /></label
+                    ><label
+                      >Parallel requests<select id="concurrency">
+                        <option>1</option>
+                        <option>2</option>
+                        <option selected>3</option>
+                        <option>4</option>
+                      </select></label
+                    >
+                  </div>
+                  <label class="check-label fallback-label"
+                    ><input type="checkbox" id="fallback" />Try the other
+                    provider after a failure</label
+                  >
+                  <p>
+                    Fallback answers remain separate from the visibility
+                    comparison. Transient errors allow up to two retries per
+                    provider.
+                  </p>
+                </details>
+              </div>
+            </div>
+          </fieldset>
+          <div class="run-footer">
+            <div>
+              <p id="run-estimate">
+                20 primary requests · up to 60 API attempts
+              </p>
+              <p class="muted small">
+                Live runs use your API balance. Search and retry charges may
+                apply.
+              </p>
+            </div>
+            <div class="run-buttons">
+              <button id="stop" class="button secondary" type="button" hidden>
+                Stop</button
+              ><button id="run" class="button primary" type="submit">
+                Run analysis <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+        </form>
+      </section>
+
+      <section
+        id="results"
+        class="section results"
+        aria-labelledby="results-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / Read the signal</p>
+            <h2 id="results-title">Visibility, with context.</h2>
+          </div>
+          <button id="export" class="small-button" type="button">
+            Export results
+          </button>
+        </div>
+        <div class="run-state">
+          <p id="run-status" role="status" aria-live="polite">
+            Illustrative example · Northstar · no API calls
+          </p>
+          <span id="progress-label">20 / 20 answers</span>
+        </div>
+        <progress
+          id="progress"
+          max="20"
+          value="20"
+          aria-label="Run progress"
+        ></progress>
+        <div class="metrics-grid">
+          <div>
+            <p>Grounded primary answers</p>
+            <strong id="coverage-value">—</strong
+            ><span id="coverage-caption"
+              >Eligible answers / planned samples</span
+            >
+          </div>
+          <div>
+            <p>Sources cited</p>
+            <strong id="sources-value">—</strong
+            ><span>Unique pages across eligible answers</span>
+          </div>
+          <div>
+            <p>Recovered with fallback</p>
+            <strong id="fallback-value">—</strong
+            ><span>Kept outside the comparison</span>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-heading">
+            <div>
+              <h3 id="chart-title">Brand visibility</h3>
+              <p>Mention rate in eligible, grounded answers</p>
+            </div>
+            <p id="chart-brand" class="chart-brand">Northstar</p>
+          </div>
+          <div id="chart" role="img" aria-labelledby="chart-title"></div>
+          <div id="chart-detail" class="chart-detail"></div>
+          <p class="chart-note">
+            Failed answers are excluded, not counted as absences. Questions that
+            name the brand are excluded. This measures this question set, not
+            market share.
+          </p>
+        </div>
+        <div class="sources-heading">
+          <div>
+            <h3>Top sources</h3>
+            <p>Pages cited most often in the measured answers.</p>
+          </div>
+          <label class="source-filter"
+            >Provider<select id="source-provider">
+              <option value="all">All providers</option>
+              <option value="openai">OpenAI</option>
+              <option value="perplexity">Perplexity</option>
+            </select></label
+          >
+        </div>
+        <div class="table-scroll">
+          <table class="sources-table">
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Source</th>
+                <th scope="col" class="numeric">Answers citing</th>
+                <th scope="col">Provider</th>
+              </tr>
+            </thead>
+            <tbody id="sources-body"></tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          One count per answer per page. Only cited source links are included;
+          retrieved but uncited pages are left out.
+        </p>
+        <details class="answer-details">
+          <summary>
+            Inspect every answer <span id="answer-total"></span>
+          </summary>
+          <p class="muted small">
+            Citation markers link to provider-supplied sources. Open an answer
+            to inspect evidence, model and recovery details.
+          </p>
+          <div id="answers"></div>
+        </details>
+      </section>
+      <section id="method" class="method section">
+        <div>
+          <p class="eyebrow">03 / Know what is measured</p>
+          <h2>Evidence before<br />interpretation.</h2>
+        </div>
+        <div class="method-copy">
+          <div>
+            <h3>The same questions. A fairer comparison.</h3>
+            <p>
+              Every selected provider receives the same questions. The brand and
+              aliases are checked locally against the answer body. Citation
+              labels and link destinations do not count as mentions.
+            </p>
+          </div>
+          <div>
+            <h3>Sources you can inspect.</h3>
+            <p>
+              A measured answer must be complete, include search evidence and
+              have citation markers that resolve to valid public web links.
+              These checks do not prove a claim true or a page available. Read
+              the sources before drawing conclusions.
+            </p>
+          </div>
+          <div>
+            <h3>Local by design.</h3>
+            <p>
+              No account, database or analytics. The server listens only on this
+              computer. Prompts are sent to the providers you select; their data
+              and billing policies apply. Export a run if you want to keep it.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <a class="wordmark" href="#">Visibility Lab</a>
+      <p>An independent, local research prototype.</p>
+      <a
+        href="https://github.com/frenesyyyyy/visibility-lab"
+        target="_blank"
+        rel="noopener noreferrer"
+        >View source ↗</a
+      >
+    </footer>
+  </body>
+</html>
